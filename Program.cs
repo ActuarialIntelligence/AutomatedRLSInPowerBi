@@ -78,5 +78,27 @@ xmlns=""http://schemas.microsoft.com/analysisservices/2014/engine""><DatabaseID>
             var applyRoleQuery = AddFilterTorole;
             objServer.Execute(applyRoleQuery);
         }
+
+        private static XmlaResultCollection DynamicXMLAParser(
+string serverAddress, string database, string XMLAQuery, bool outputToCsv)
+        {
+            string ConnectionString = @"Provider=MSOLAP;Data Source=" + serverAddress +
+           @";Initial Catalog=" + database + ";Integrated Security=SSPI;ImpersonationLevel = Impersonate; persist security info = True; ";
+
+            var XMLA = XMLAQuery;
+            var objServer = new Microsoft.AnalysisServices.Tabular.Server();
+            objServer.Connect(ConnectionString);
+            var reader = objServer.ExecuteReader(XMLA, out XmlaResultCollection
+           resultsOut, null, true);
+            // Add all roles to Cached List
+            //while (reader.Read())
+            //{
+
+            //}
+            reader.Close();
+            reader.Dispose();
+            objServer.Dispose();
+            return resultsOut;
+        }
     }
 }
